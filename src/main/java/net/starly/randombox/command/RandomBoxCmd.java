@@ -41,10 +41,7 @@ public class RandomBoxCmd implements CommandExecutor {
                 if (!(sender instanceof Player)) {
                     sender.sendMessage(msgContext.getMessageAfterPrefix(MessageType.ERROR, "onlyPlayer"));
                     return true;
-                } else if (!sender.hasPermission("starly.randombox.create")) {
-                    sender.sendMessage(msgContext.getMessageAfterPrefix(MessageType.ERROR, "noPermission"));
-                    return true;
-                }
+                } else if (!hasPermission(sender, "create")) return true;
                 Player player = (Player) sender;
                 
                 if (args.length == 1) {
@@ -71,10 +68,7 @@ public class RandomBoxCmd implements CommandExecutor {
             }
 
             case "삭제": {
-                if (!sender.hasPermission("starly.randombox.delete")) {
-                    sender.sendMessage(msgContext.getMessageAfterPrefix(MessageType.ERROR, "noPermission"));
-                    return true;
-                }
+                if (!hasPermission(sender, "delete")) return true;
                 
                 if (args.length == 1) {
                     sender.sendMessage(msgContext.getMessageAfterPrefix(MessageType.ERROR, "noId"));
@@ -101,10 +95,7 @@ public class RandomBoxCmd implements CommandExecutor {
                 if (!(sender instanceof Player)) {
                     sender.sendMessage(msgContext.getMessageAfterPrefix(MessageType.ERROR, "onlyPlayer"));
                     return true;
-                } else if (!sender.hasPermission("starly.randombox.edit")) {
-                    sender.sendMessage(msgContext.getMessageAfterPrefix(MessageType.ERROR, "noPermission"));
-                    return true;
-                }
+                } else if (!hasPermission(sender, "edit")) return true;
                 Player player = (Player) sender;
                 
                 if (args.length == 1) {
@@ -130,10 +121,7 @@ public class RandomBoxCmd implements CommandExecutor {
             }
 
             case "지급": {
-                if (!sender.hasPermission("starly.randombox.give")) {
-                    sender.sendMessage(msgContext.getMessageAfterPrefix(MessageType.ERROR, "noPermission"));
-                    return true;
-                }
+                if (!hasPermission(sender, "give")) return true;
 
                 if (args.length == 1) {
                     sender.sendMessage(msgContext.getMessageAfterPrefix(MessageType.ERROR, "noId"));
@@ -197,5 +185,12 @@ public class RandomBoxCmd implements CommandExecutor {
                 return true;
             }
         }
+    }
+
+    private boolean hasPermission(CommandSender sender, String subPermission) {
+        if (sender.hasPermission("starly.randombox." + subPermission)) return true;
+
+        sender.sendMessage(MessageContext.getInstance().getMessageAfterPrefix(MessageType.ERROR, "noPermission"));
+        return false;
     }
 }

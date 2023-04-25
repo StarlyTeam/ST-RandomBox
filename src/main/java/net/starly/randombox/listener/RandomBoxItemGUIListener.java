@@ -14,7 +14,7 @@ import java.util.Arrays;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-public class InventoryListener implements Listener {
+public class RandomBoxItemGUIListener implements Listener {
 
     @EventHandler
     public void onClick(InventoryClickEvent event) {

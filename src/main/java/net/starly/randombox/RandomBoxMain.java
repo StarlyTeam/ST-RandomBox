@@ -4,8 +4,8 @@ import lombok.Getter;
 import net.starly.core.bstats.Metrics;
 import net.starly.randombox.command.RandomBoxCmd;
 import net.starly.randombox.command.tabcomplete.RandomBoxTab;
-import net.starly.randombox.listener.InventoryListener;
-import net.starly.randombox.listener.PlayerInteractListener;
+import net.starly.randombox.listener.RandomBoxItemGUIListener;
+import net.starly.randombox.listener.RandomBoxRightClickListener;
 import net.starly.randombox.message.MessageContext;
 import net.starly.randombox.repo.RandomBoxRepository;
 import net.starly.randombox.repo.impl.RandomBoxRepositoryImpl;
@@ -60,8 +60,8 @@ public class RandomBoxMain extends JavaPlugin {
 
         /* LISTENER
          ──────────────────────────────────────────────────────────────────────────────────────────────────────────────── */
-        getServer().getPluginManager().registerEvents(new InventoryListener(), instance);
-        getServer().getPluginManager().registerEvents(new PlayerInteractListener(), instance);
+        getServer().getPluginManager().registerEvents(new RandomBoxItemGUIListener(), instance);
+        getServer().getPluginManager().registerEvents(new RandomBoxRightClickListener(), instance);
     }
 
     @Override

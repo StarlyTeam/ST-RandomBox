@@ -21,7 +21,7 @@ import org.bukkit.inventory.ItemStack;
 import java.util.List;
 import java.util.Random;
 
-public class PlayerInteractListener implements Listener {
+public class RandomBoxRightClickListener implements Listener {
 
     @EventHandler
     public void onInteract(PlayerInteractEvent event) {
