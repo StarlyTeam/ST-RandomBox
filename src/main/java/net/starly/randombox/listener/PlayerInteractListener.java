@@ -5,6 +5,8 @@ import net.starly.core.jb.version.nms.wrapper.ItemStackWrapper;
 import net.starly.core.jb.version.nms.wrapper.NBTTagCompoundWrapper;
 import net.starly.core.util.InventoryUtil;
 import net.starly.randombox.RandomBoxMain;
+import net.starly.randombox.message.MessageContext;
+import net.starly.randombox.message.MessageType;
 import net.starly.randombox.randombox.RandomBox;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -43,7 +45,7 @@ public class PlayerInteractListener implements Listener {
         if (handStack.getAmount() == 1) player.getInventory().setItemInMainHand(new ItemStack(Material.AIR));
         else {
             if (InventoryUtil.getSpace(player.getInventory()) - 5 < 1) {
-                player.sendMessage("인벤토리에 빈 공간이 부족합니다.");
+                player.sendMessage(MessageContext.getInstance().getMessageAfterPrefix(MessageType.ERROR, "inventoryIsFull").replace("{target}", player.getName()));
                 return;
             }
 
@@ -56,7 +58,7 @@ public class PlayerInteractListener implements Listener {
             ItemStack itemStack1 = items.get(new Random().nextInt(items.size() - 1));
 
             player.getInventory().addItem(itemStack1);
-            player.sendMessage("헉! " + itemStack1.getType() + " 에 당첨되셨네요!");
+            player.sendMessage(MessageContext.getInstance().getMessageAfterPrefix(MessageType.NORMAL, "randomBoxOpened").replace("{item}", itemStack1.getType() + "x" + itemStack1.getAmount()));
             player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1f, 1f);
         }
     }

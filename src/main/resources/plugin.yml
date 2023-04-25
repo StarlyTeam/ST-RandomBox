@@ -13,4 +13,5 @@ api-version: 1.13
 
 commands:
 
-  랜덤박스:
+  random-box:
+    aliases: [ randombox, 랜덤박스 ]

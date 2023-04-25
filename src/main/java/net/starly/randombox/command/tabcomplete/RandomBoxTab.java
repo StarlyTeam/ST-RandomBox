@@ -19,11 +19,17 @@ public class RandomBoxTab implements TabCompleter {
         List<String> completions = new ArrayList<>();
 
         if (args.length == 1) {
-            completions.addAll(Arrays.asList("생성", "편집", "지급"));
+            if (sender.hasPermission("starly.randombox.delete")) completions.add("삭제");
+            if (sender.hasPermission("starly.randombox.give")) completions.add("지급");
+
+            if (sender instanceof Player) {
+                if (sender.hasPermission("starly.randombox.create")) completions.add("생성");
+                if (sender.hasPermission("starly.randombox.edit")) completions.add("편집");
+            }
         } else if (args.length == 2) {
             if (args[0].equals("생성")) {
                 completions.add("<뽑기상자ID>");
-            } else if (Arrays.asList("편집", "지급").contains(args[0])) {
+            } else if (Arrays.asList("삭제", "편집", "지급").contains(args[0])) {
                 completions.add("<뽑기상자ID>");
                 completions.addAll(RandomBoxMain.getInstance().getRandomBoxRepository().getAllRandomBox().stream().map(RandomBox::getName).collect(Collectors.toList()));
             }

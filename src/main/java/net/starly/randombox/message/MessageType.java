@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @AllArgsConstructor
 public enum MessageType {
-    NORMAL("messages.alphachest"), ERROR("errorMessages.alphachest");
+    NORMAL("messages"), ERROR("errorMessages");
 
     @Getter
     private final String path;

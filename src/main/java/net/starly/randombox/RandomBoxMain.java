@@ -6,8 +6,10 @@ import net.starly.randombox.command.RandomBoxCmd;
 import net.starly.randombox.command.tabcomplete.RandomBoxTab;
 import net.starly.randombox.listener.InventoryListener;
 import net.starly.randombox.listener.PlayerInteractListener;
+import net.starly.randombox.message.MessageContext;
 import net.starly.randombox.repo.RandomBoxRepository;
 import net.starly.randombox.repo.impl.RandomBoxRepositoryImpl;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -39,19 +41,22 @@ public class RandomBoxMain extends JavaPlugin {
          ──────────────────────────────────────────────────────────────────────────────────────────────────────────────── */
         instance = this;
         randomBoxRepository = new RandomBoxRepositoryImpl();
-//        new Metrics(this, 12345); // TODO: 수정
+        new Metrics(this, 18296);
 
         /* CONFIG
          ──────────────────────────────────────────────────────────────────────────────────────────────────────────────── */
         File randomBoxFolder = new File(getDataFolder(), "randombox/");
         if (!randomBoxFolder.exists()) randomBoxFolder.mkdirs();
-        randomBoxRepository.initialize(randomBoxFolder);
-//        saveDefaultConfig();
+        else randomBoxRepository.initialize(randomBoxFolder);
+
+        File messageFile = new File(getDataFolder(), "message.yml");
+        if (!messageFile.exists()) saveResource("message.yml", true);
+        MessageContext.getInstance().initialize(YamlConfiguration.loadConfiguration(messageFile));
 
         /* COMMAND
          ──────────────────────────────────────────────────────────────────────────────────────────────────────────────── */
-        getServer().getPluginCommand("랜덤박스").setExecutor(new RandomBoxCmd());
-        getServer().getPluginCommand("랜덤박스").setTabCompleter(new RandomBoxTab());
+        getServer().getPluginCommand("random-box").setExecutor(new RandomBoxCmd());
+        getServer().getPluginCommand("random-box").setTabCompleter(new RandomBoxTab());
 
         /* LISTENER
          ──────────────────────────────────────────────────────────────────────────────────────────────────────────────── */

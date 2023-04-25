@@ -6,6 +6,8 @@ import net.starly.core.jb.version.nms.wrapper.NBTTagCompoundWrapper;
 import net.starly.core.util.InventoryUtil;
 import net.starly.randombox.RandomBoxMain;
 import net.starly.randombox.data.holder.RandomBoxItemInventoryHolder;
+import net.starly.randombox.message.MessageContext;
+import net.starly.randombox.message.MessageType;
 import net.starly.randombox.randombox.RandomBox;
 import net.starly.randombox.randombox.impl.RandomBoxImpl;
 import net.starly.randombox.repo.RandomBoxRepository;
@@ -27,21 +29,29 @@ public class RandomBoxCmd implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-        if (!(sender instanceof Player)) return true;
-        Player player = (Player) sender;
+        MessageContext msgContext = MessageContext.getInstance();
 
         if (args.length == 0) {
-            player.sendMessage("잘못된 명령어입니다.");
+            sender.sendMessage(msgContext.getMessageAfterPrefix(MessageType.ERROR, "wrongCommand"));
             return true;
         }
 
         switch (args[0]) {
             case "생성": {
+                if (!(sender instanceof Player)) {
+                    sender.sendMessage(msgContext.getMessageAfterPrefix(MessageType.ERROR, "onlyPlayer"));
+                    return true;
+                } else if (!sender.hasPermission("starly.randombox.create")) {
+                    sender.sendMessage(msgContext.getMessageAfterPrefix(MessageType.ERROR, "noPermission"));
+                    return true;
+                }
+                Player player = (Player) sender;
+                
                 if (args.length == 1) {
-                    player.sendMessage("뽑기상자의 ID를 입력해주세요.");
+                    player.sendMessage(msgContext.getMessageAfterPrefix(MessageType.ERROR, "noId"));
                     return true;
                 } else if (args.length != 2) {
-                    player.sendMessage("잘못된 명령어입니다.");
+                    player.sendMessage(msgContext.getMessageAfterPrefix(MessageType.ERROR, "wrongCommand"));
                     return true;
                 }
 
@@ -49,31 +59,66 @@ public class RandomBoxCmd implements CommandExecutor {
                 String boxName = args[1];
 
                 if (randomBoxRepository.getRandomBox(boxName) != null) {
-                    player.sendMessage("해당 ID의 뽑기상자는 이미 존재합니다.");
+                    player.sendMessage(msgContext.getMessageAfterPrefix(MessageType.ERROR, "idAlreadyTaken"));
                     return true;
                 }
 
                 randomBoxRepository.setRandomBox(boxName, new RandomBoxImpl(boxName));
-                player.sendMessage("뽑기상자를 생성했습니다.");
+                player.sendMessage(msgContext.getMessageAfterPrefix(MessageType.NORMAL, "randomBoxCreated"));
 
                 player.openInventory(RandomBoxMain.getInstance().getServer().createInventory(new RandomBoxItemInventoryHolder(boxName), 54, "아이템 설정 [" + boxName + "]"));
-                player.sendMessage("뽑기상자의 아이템을 설정해주세요.");
+                return true;
+            }
+
+            case "삭제": {
+                if (!sender.hasPermission("starly.randombox.delete")) {
+                    sender.sendMessage(msgContext.getMessageAfterPrefix(MessageType.ERROR, "noPermission"));
+                    return true;
+                }
+                
+                if (args.length == 1) {
+                    sender.sendMessage(msgContext.getMessageAfterPrefix(MessageType.ERROR, "noId"));
+                    return true;
+                } else if (args.length != 2) {
+                    sender.sendMessage(msgContext.getMessageAfterPrefix(MessageType.ERROR, "wrongCommand"));
+                    return true;
+                }
+
+                RandomBoxRepository randomBoxRepository = RandomBoxMain.getInstance().getRandomBoxRepository();
+                String boxName = args[1];
+
+                if (randomBoxRepository.getRandomBox(boxName) == null) {
+                    sender.sendMessage(msgContext.getMessageAfterPrefix(MessageType.ERROR, "randomBoxNotExists"));
+                    return true;
+                }
+
+                randomBoxRepository.removeRandomBox(boxName);
+                sender.sendMessage(msgContext.getMessageAfterPrefix(MessageType.NORMAL, "randomBoxDeleted"));
                 return true;
             }
 
             case "편집": {
+                if (!(sender instanceof Player)) {
+                    sender.sendMessage(msgContext.getMessageAfterPrefix(MessageType.ERROR, "onlyPlayer"));
+                    return true;
+                } else if (!sender.hasPermission("starly.randombox.edit")) {
+                    sender.sendMessage(msgContext.getMessageAfterPrefix(MessageType.ERROR, "noPermission"));
+                    return true;
+                }
+                Player player = (Player) sender;
+                
                 if (args.length == 1) {
-                    player.sendMessage("뽑기상자의 ID를 입력해주세요.");
+                    player.sendMessage(msgContext.getMessageAfterPrefix(MessageType.ERROR, "noId"));
                     return true;
                 } else if (args.length != 2) {
-                    player.sendMessage("잘못된 명령어입니다.");
+                    player.sendMessage(msgContext.getMessageAfterPrefix(MessageType.ERROR, "wrongCommand"));
                     return true;
                 }
 
                 String boxName = args[1];
                 RandomBox randomBox = RandomBoxMain.getInstance().getRandomBoxRepository().getRandomBox(boxName);
                 if (randomBox == null) {
-                    player.sendMessage("해당 ID의 뽑기상자가 존재하지 않습니다.");
+                    player.sendMessage(msgContext.getMessageAfterPrefix(MessageType.ERROR, "randomBoxNotExists"));
                     return true;
                 }
 
@@ -85,21 +130,26 @@ public class RandomBoxCmd implements CommandExecutor {
             }
 
             case "지급": {
+                if (!sender.hasPermission("starly.randombox.give")) {
+                    sender.sendMessage(msgContext.getMessageAfterPrefix(MessageType.ERROR, "noPermission"));
+                    return true;
+                }
+
                 if (args.length == 1) {
-                    player.sendMessage("뽑기상자의 ID를 입력해주세요.");
+                    sender.sendMessage(msgContext.getMessageAfterPrefix(MessageType.ERROR, "noId"));
                     return true;
                 } else if (args.length == 2) {
-                    player.sendMessage("지급 대상을 입력해주세요.");
+                    sender.sendMessage(msgContext.getMessageAfterPrefix(MessageType.ERROR, "noTarget"));
                     return true;
                 } else if (args.length != 3) {
-                    player.sendMessage("잘못된 명령어입니다.");
+                    sender.sendMessage(msgContext.getMessageAfterPrefix(MessageType.ERROR, "wrongCommand"));
                     return true;
                 }
 
                 String boxName = args[1];
                 RandomBox randomBox = RandomBoxMain.getInstance().getRandomBoxRepository().getRandomBox(boxName);
                 if (randomBox == null) {
-                    player.sendMessage("해당 ID의 뽑기상자가 존재하지 않습니다.");
+                    sender.sendMessage(msgContext.getMessageAfterPrefix(MessageType.ERROR, "randomBoxNotExists"));
                     return true;
                 }
 
@@ -111,7 +161,7 @@ public class RandomBoxCmd implements CommandExecutor {
                 }
 
                 if (targets == null) {
-                    player.sendMessage("플레이어가 존재하지 않거나, 온라인이 아닙니다.");
+                    sender.sendMessage(msgContext.getMessageAfterPrefix(MessageType.ERROR, "playerNotFound"));
                     return true;
                 }
 
@@ -129,20 +179,21 @@ public class RandomBoxCmd implements CommandExecutor {
 
                 ItemStack finalItemStack = NmsItemStackUtil.getInstance().asBukkitCopy(nmsStack);
 
-                targets.stream().map(Player::getInventory).forEach(inv -> {
-                    if (InventoryUtil.getSpace(inv) - 5 < 1) {
-                        player.sendMessage(inv.getViewers().get(0).getName() + "님의 인벤토리에 빈 공간이 없어 지급되지 않았습니다.");
+                targets.forEach(target -> {
+                    Inventory inventory = target.getInventory();
+                    if (InventoryUtil.getSpace(inventory) - 5 < 1) {
+                        sender.sendMessage(msgContext.getMessageAfterPrefix(MessageType.ERROR, "inventoryIsFull").replace("{target}", target.getName()));
                         return;
                     }
 
-                    inv.addItem(finalItemStack);
-                    player.sendMessage(inv.getViewers().get(0).getName() + "님에게 뽑기상자를 지급했습니다.");
+                    inventory.addItem(finalItemStack);
+                    sender.sendMessage(msgContext.getMessageAfterPrefix(MessageType.NORMAL, "gaveRandomBox").replace("{target}", target.getName()));
                 });
                 return true;
             }
 
             default: {
-                player.sendMessage("잘못된 명령어입니다.");
+                sender.sendMessage(msgContext.getMessageAfterPrefix(MessageType.ERROR, "wrongCommand"));
                 return true;
             }
         }

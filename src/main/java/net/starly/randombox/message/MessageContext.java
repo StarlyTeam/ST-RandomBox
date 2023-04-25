@@ -23,7 +23,7 @@ public class MessageContext {
     private String prefix;
 
     @Deprecated
-    public void $loadConfig(FileConfiguration config) {
+    public void initialize(FileConfiguration config) {
         prefix = ChatColor.translateAlternateColorCodes('&', config.getString("prefix"));
         Arrays.asList(MessageType.values()).forEach(type -> initializeMessages(type, config.getConfigurationSection(type.getPath())));
     }
