@@ -28,9 +28,9 @@ public class RandomBoxTab implements TabCompleter {
             }
         } else if (args.length == 2) {
             if (args[0].equals("생성")) {
-                completions.add("<뽑기상자ID>");
+                completions.add("<랜덤박스ID>");
             } else if (Arrays.asList("삭제", "편집", "지급").contains(args[0])) {
-                completions.add("<뽑기상자ID>");
+                completions.add("<랜덤박스ID>");
                 completions.addAll(RandomBoxMain.getInstance().getRandomBoxRepository().getAllRandomBox().stream().map(RandomBox::getName).collect(Collectors.toList()));
             }
         } else if (args.length == 3) {

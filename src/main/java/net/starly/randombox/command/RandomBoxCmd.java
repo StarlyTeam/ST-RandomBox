@@ -167,8 +167,8 @@ public class RandomBoxCmd implements CommandExecutor {
 
                 ItemStack itemStack = new ItemStack(Material.CHEST);
                 ItemMeta itemMeta = itemStack.getItemMeta();
-                itemMeta.setDisplayName("§6뽑기상자 [" + boxName + "]");
-                itemMeta.setLore(Arrays.asList("§r§7[§e!§7] §f우클릭으로 뽑기상자를 열어보자!"));
+                itemMeta.setDisplayName("§6랜덤박스 [" + boxName + "]");
+                itemMeta.setLore(Arrays.asList("§r§7[§e!§7] §f우클릭으로 랜덤박스를 열어보자!"));
                 itemStack.setItemMeta(itemMeta);
 
                 ItemStackWrapper nmsStack = NmsItemStackUtil.getInstance().asNMSCopy(itemStack);
