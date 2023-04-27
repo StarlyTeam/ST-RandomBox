@@ -78,3 +78,6 @@ errorMessages:
   # 지급대상의 인벤토리가 꽉찬 경우
   # {target} : 지급대상
   inventoryIsFull: "&c{target}님의 인벤토리에 빈 공간이 없어 지급되지 않았습니다."
+
+  # 랜덤박스에 아이템이 없거나 1개 일 경우
+  randomBoxIsEmpty: "&c랜덤박스안에 아이템이 없거나 1개 밖에 없습니다. (관리자에게 문의해주세요.)"
