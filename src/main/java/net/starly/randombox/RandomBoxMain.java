@@ -66,7 +66,7 @@ public class RandomBoxMain extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        randomBoxRepository.saveAll();
+        if (randomBoxRepository != null) randomBoxRepository.saveAll();
     }
 
     private boolean isPluginEnabled(String name) {
