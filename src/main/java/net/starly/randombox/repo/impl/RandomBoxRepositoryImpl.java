@@ -64,17 +64,23 @@ public class RandomBoxRepositoryImpl implements RandomBoxRepository {
             String boxName = entry.getKey();
             RandomBox randomBox = entry.getValue();
 
-            File randomboxFolder = new File(this.randomboxFolder, boxName + ".yml");
-            FileConfiguration randomboxConfig = YamlConfiguration.loadConfiguration(randomboxFolder);
+            File randomboxFile = new File(this.randomboxFolder, boxName + ".yml");
+            FileConfiguration randomboxConfig = YamlConfiguration.loadConfiguration(randomboxFile);
 
             randomboxConfig.set("items", randomBox.getItems().stream().map(EncodeUtil::encode).collect(Collectors.toList()));
             randomboxConfig.set("name", boxName);
 
             try {
-                randomboxConfig.save(randomboxFolder);
+                randomboxConfig.save(randomboxFile);
             } catch (IOException ex) {
                 ex.printStackTrace();
             }
+        }
+
+        for (File randomboxFile : randomboxFolder.listFiles()) {
+            String boxName = randomboxFile.getName().replace(".yml", "");
+
+            if (getRandomBox(boxName) == null) randomboxFile.delete();
         }
     }
 }
