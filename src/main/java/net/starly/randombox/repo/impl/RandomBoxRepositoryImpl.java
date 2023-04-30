@@ -56,10 +56,15 @@ public class RandomBoxRepositoryImpl implements RandomBoxRepository {
     @Override
     public void removeRandomBox(String name) {
         randomBoxMap.remove(name);
+
+        File randomboxFile = new File(this.randomboxFolder, name + ".yml");
+        randomboxFile.delete();
     }
 
     @Override
     public void saveAll() {
+        if (!randomboxFolder.exists()) randomboxFolder.mkdirs();
+
         for (Map.Entry<String, RandomBox> entry : randomBoxMap.entrySet()) {
             String boxName = entry.getKey();
             RandomBox randomBox = entry.getValue();
