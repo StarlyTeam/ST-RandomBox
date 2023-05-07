@@ -56,7 +56,7 @@ public class RandomBoxRightClickListener implements Listener {
         if (randomBox != null) {
             List<ItemStack> items = randomBox.getItems();
             try {
-                ItemStack itemStack1 = items.get(new Random().nextInt(items.size() - 1));
+                ItemStack itemStack1 = items.get(new Random().nextInt(items.size()));
                 player.getInventory().addItem(itemStack1);
                 player.sendMessage(MessageContext.getInstance().getMessageAfterPrefix(MessageType.NORMAL, "randomBoxOpened").replace("{item}", itemStack1.getType() + "x" + itemStack1.getAmount()));
                 player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1f, 1f);
