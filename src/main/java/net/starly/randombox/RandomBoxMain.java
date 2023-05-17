@@ -47,7 +47,7 @@ public class RandomBoxMain extends JavaPlugin {
          ──────────────────────────────────────────────────────────────────────────────────────────────────────────────── */
         File randomBoxFolder = new File(getDataFolder(), "randombox/");
         if (!randomBoxFolder.exists()) randomBoxFolder.mkdirs();
-        else randomBoxRepository.initialize(randomBoxFolder);
+        randomBoxRepository.initialize(randomBoxFolder);
 
         File messageFile = new File(getDataFolder(), "message.yml");
         if (!messageFile.exists()) saveResource("message.yml", true);
