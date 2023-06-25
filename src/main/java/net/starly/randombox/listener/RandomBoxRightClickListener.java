@@ -4,10 +4,9 @@ import net.starly.core.jb.version.nms.tank.NmsItemStackUtil;
 import net.starly.core.jb.version.nms.wrapper.ItemStackWrapper;
 import net.starly.core.jb.version.nms.wrapper.NBTTagCompoundWrapper;
 import net.starly.core.util.InventoryUtil;
-import net.starly.randombox.RandomBoxMain;
+import net.starly.randombox.RandomBox;
 import net.starly.randombox.message.MessageContext;
 import net.starly.randombox.message.MessageType;
-import net.starly.randombox.randombox.RandomBox;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -17,6 +16,7 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.List;
 import java.util.Random;
@@ -52,13 +52,23 @@ public class RandomBoxRightClickListener implements Listener {
             handStack.setAmount(handStack.getAmount() - 1);
         }
 
-        RandomBox randomBox = RandomBoxMain.getInstance().getRandomBoxRepository().getRandomBox(boxName);
+        net.starly.randombox.randombox.RandomBox randomBox = RandomBox.getInstance().getRandomBoxRepository().getRandomBox(boxName);
         if (randomBox != null) {
             List<ItemStack> items = randomBox.getItems();
             try {
-                ItemStack itemStack1 = items.get(new Random().nextInt(items.size()));
-                player.getInventory().addItem(itemStack1);
-                player.sendMessage(MessageContext.getInstance().getMessageAfterPrefix(MessageType.NORMAL, "randomBoxOpened").replace("{item}", itemStack1.getItemMeta().hasDisplayName() ? itemStack1.getItemMeta().getDisplayName() + "x" + itemStack1.getAmount() : itemStack1.getType() + "x" + itemStack1.getAmount()));
+                ItemStack prizeStack = items.get(new Random().nextInt(items.size()));
+
+                if (player.getInventory().firstEmpty() == -1) {
+                    player.getWorld().dropItem(player.getLocation(), prizeStack);
+                } else {
+                    JavaPlugin plugin = RandomBox.getInstance();
+                    plugin.getServer().getScheduler().runTaskLater(plugin, () -> player.getInventory().addItem(prizeStack), 1L);
+                }
+
+                player.sendMessage(MessageContext.getInstance().getMessageAfterPrefix(MessageType.NORMAL, "randomBoxOpened")
+                        .replace("{item}", (prizeStack.getItemMeta().hasDisplayName() ?
+                                prizeStack.getItemMeta().getDisplayName() : prizeStack.getType()) + "x" + prizeStack.getAmount())
+                );
                 player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1f, 1f);
             } catch (IllegalArgumentException e) {
                 player.sendMessage(MessageContext.getInstance().getMessageAfterPrefix(MessageType.ERROR, "randomBoxIsEmpty"));
