@@ -1,5 +1,5 @@
 name: ST-RandomBox
-main: net.starly.randombox.RandomBoxMain
+main: net.starly.randombox.RandomBox
 author: Starly Team
 website: http://starly.kr/
 
