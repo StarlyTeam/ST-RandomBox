@@ -4,11 +4,10 @@ import net.starly.core.jb.version.nms.tank.NmsItemStackUtil;
 import net.starly.core.jb.version.nms.wrapper.ItemStackWrapper;
 import net.starly.core.jb.version.nms.wrapper.NBTTagCompoundWrapper;
 import net.starly.core.util.InventoryUtil;
-import net.starly.randombox.RandomBoxMain;
+import net.starly.randombox.RandomBox;
 import net.starly.randombox.data.holder.RandomBoxItemInventoryHolder;
 import net.starly.randombox.message.MessageContext;
 import net.starly.randombox.message.MessageType;
-import net.starly.randombox.randombox.RandomBox;
 import net.starly.randombox.randombox.impl.RandomBoxImpl;
 import net.starly.randombox.repo.RandomBoxRepository;
 import org.bukkit.Material;
@@ -52,7 +51,7 @@ public class RandomBoxCmd implements CommandExecutor {
                     return true;
                 }
 
-                RandomBoxRepository randomBoxRepository = RandomBoxMain.getInstance().getRandomBoxRepository();
+                RandomBoxRepository randomBoxRepository = RandomBox.getInstance().getRandomBoxRepository();
                 String boxName = args[1];
 
                 if (randomBoxRepository.getRandomBox(boxName) != null) {
@@ -63,7 +62,7 @@ public class RandomBoxCmd implements CommandExecutor {
                 randomBoxRepository.setRandomBox(boxName, new RandomBoxImpl(boxName));
                 player.sendMessage(msgContext.getMessageAfterPrefix(MessageType.NORMAL, "randomBoxCreated"));
 
-                player.openInventory(RandomBoxMain.getInstance().getServer().createInventory(new RandomBoxItemInventoryHolder(boxName), 54, "아이템 설정 [" + boxName + "]"));
+                player.openInventory(RandomBox.getInstance().getServer().createInventory(new RandomBoxItemInventoryHolder(boxName), 54, "아이템 설정 [" + boxName + "]"));
                 return true;
             }
 
@@ -78,7 +77,7 @@ public class RandomBoxCmd implements CommandExecutor {
                     return true;
                 }
 
-                RandomBoxRepository randomBoxRepository = RandomBoxMain.getInstance().getRandomBoxRepository();
+                RandomBoxRepository randomBoxRepository = RandomBox.getInstance().getRandomBoxRepository();
                 String boxName = args[1];
 
                 if (randomBoxRepository.getRandomBox(boxName) == null) {
@@ -107,13 +106,13 @@ public class RandomBoxCmd implements CommandExecutor {
                 }
 
                 String boxName = args[1];
-                RandomBox randomBox = RandomBoxMain.getInstance().getRandomBoxRepository().getRandomBox(boxName);
+                net.starly.randombox.randombox.RandomBox randomBox = RandomBox.getInstance().getRandomBoxRepository().getRandomBox(boxName);
                 if (randomBox == null) {
                     player.sendMessage(msgContext.getMessageAfterPrefix(MessageType.ERROR, "randomBoxNotExists"));
                     return true;
                 }
 
-                Inventory inventory = RandomBoxMain.getInstance().getServer().createInventory(new RandomBoxItemInventoryHolder(boxName), 54, "아이템 설정 [" + boxName + "]");
+                Inventory inventory = RandomBox.getInstance().getServer().createInventory(new RandomBoxItemInventoryHolder(boxName), 54, "아이템 설정 [" + boxName + "]");
                 randomBox.getItems().forEach(inventory::addItem);
 
                 player.openInventory(inventory);
@@ -135,16 +134,16 @@ public class RandomBoxCmd implements CommandExecutor {
                 }
 
                 String boxName = args[1];
-                RandomBox randomBox = RandomBoxMain.getInstance().getRandomBoxRepository().getRandomBox(boxName);
+                net.starly.randombox.randombox.RandomBox randomBox = RandomBox.getInstance().getRandomBoxRepository().getRandomBox(boxName);
                 if (randomBox == null) {
                     sender.sendMessage(msgContext.getMessageAfterPrefix(MessageType.ERROR, "randomBoxNotExists"));
                     return true;
                 }
 
                 List<Player> targets;
-                if (args[2].equals("@a")) targets = new ArrayList<>(RandomBoxMain.getInstance().getServer().getOnlinePlayers());
+                if (args[2].equals("@a")) targets = new ArrayList<>(RandomBox.getInstance().getServer().getOnlinePlayers());
                 else {
-                    Player target = RandomBoxMain.getInstance().getServer().getPlayer(args[2]);
+                    Player target = RandomBox.getInstance().getServer().getPlayer(args[2]);
                     targets = target == null ? null : Collections.singletonList(target);
                 }
 

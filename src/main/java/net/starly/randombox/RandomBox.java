@@ -15,10 +15,10 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
 
-public class RandomBoxMain extends JavaPlugin {
+public class RandomBox extends JavaPlugin {
 
-    private static RandomBoxMain instance;
-    public static RandomBoxMain getInstance() {
+    private static RandomBox instance;
+    public static RandomBox getInstance() {
         return instance;
     }
 

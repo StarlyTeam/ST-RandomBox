@@ -1,8 +1,7 @@
 package net.starly.randombox.listener;
 
-import net.starly.randombox.RandomBoxMain;
+import net.starly.randombox.RandomBox;
 import net.starly.randombox.data.holder.RandomBoxItemInventoryHolder;
-import net.starly.randombox.randombox.RandomBox;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -35,7 +34,7 @@ public class RandomBoxItemGUIListener implements Listener {
         if (inventory.getHolder() instanceof RandomBoxItemInventoryHolder) {
             RandomBoxItemInventoryHolder holder = (RandomBoxItemInventoryHolder) inventory.getHolder();
             String boxName = holder.getBoxName();
-            RandomBox randomBox = RandomBoxMain.getInstance().getRandomBoxRepository().getRandomBox(boxName);
+            net.starly.randombox.randombox.RandomBox randomBox = RandomBox.getInstance().getRandomBoxRepository().getRandomBox(boxName);
             randomBox.setItems(Arrays.stream(inventory.getContents()).filter(Objects::nonNull).collect(Collectors.toList()));
         }
     }
